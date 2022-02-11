@@ -1,0 +1,48 @@
+##rocketMq  tar包
+wget https://github.com/apache/rocketmq/archive/rocketmq-all-4.7.1.tar.gz
+
+tar -zxvf rocketmq-all-4.7.1.tar.gz
+
+wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+
+tar -zxvf apache-maven-3.6.3-bin.tar.gz
+
+vim /usr/local/src/apache-maven-3.6.3/conf/setting.xml
+
+  <mirrors>
+    <mirror>
+      <id>alimaven</id>
+      <mirrorOf>central</mirrorOf>
+      <name>aliyun maven</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+    </mirror>
+  </mirrors>
+
+ cd /etc/profile
+## 末尾添加
+ MAVEN_HOME=/usr/local/src/apache-maven-3.6.3
+ export MAVEN_HOME
+ export PATH=${PATH}:${MAVEN_HOME}/bin
+
+ source /etc/profile
+
+## rocketMq目录下执行
+mvn -Prelease-all -DskipTests clean install -U
+
+## 目录下/rocketmq-rocketmq-all-4.7.1/distribution/target/rocketmq-4.7.1
+nohup sh bin/mqnamesrv > /data/mq/rocketmq/nameserver.log 2>&1 &
+nohup sh bin/mqbroker -n 127.0.0.1:9876 -c conf/broker.conf autoCreateTopicEnable=true > /data/mq/rocketmq/broker.log 2>&1 &
+## 修改xxs xxn xxm
+cd /target/rocketmq-4.7.1/bin
+修改    runbroker.sh  runserver.sh  server -Xms128m -Xmx128m -Xmn128m
+
+
+
+RocketMQ之rocketmq-console可视化插件安装
+安装git地址
+https://github.com/apache/rocketmq-externals
+下拉到本地
+修改application.xml namesrvAddr为公网ip地址
+进入rocketMq-console
+RocketMQ-Externals\rocketmq-console    cmd打开命令行窗口 执行   mvn clean package -Dmaven.test.skip=true
+RocketMQ-Externals\rocketmq-console\target    执行   java -jar rocketmq-console-ng-1.0.1.jar
