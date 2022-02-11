@@ -42,6 +42,8 @@ RocketMQ之rocketmq-console可视化插件安装
 安装git地址
 https://github.com/apache/rocketmq-externals
 下拉到本地
+git config --global http.sslVerify "false"
+
 修改application.xml namesrvAddr为公网ip地址
 进入rocketMq-console
 RocketMQ-Externals\rocketmq-console    cmd打开命令行窗口 执行   mvn clean package -Dmaven.test.skip=true
